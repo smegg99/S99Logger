@@ -1,0 +1,6 @@
+app_started: "Servicio {{.service}} iniciado (versión {{.version}})"
+login_failed: "Inicio de sesión fallido para {{.username}}: {{.error}}"
+reconnect_attempt: "Reconectando con {{.host}}, intento {{.attempt}}/{{.max}} (espera {{.backoff}})"
+jobs_processed:
+  one: "Procesado {{.count}} trabajo"
+  other: "Procesados {{.count}} trabajos"

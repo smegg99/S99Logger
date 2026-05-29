@@ -1,0 +1,5 @@
+greeting = "Hello {{.name}} from TOML"
+
+[items]
+one = "{{.count}} TOML item"
+other = "{{.count}} TOML items"

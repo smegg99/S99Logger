@@ -1,0 +1,9 @@
+app_started = "Usługa {{.service}} uruchomiona (wersja {{.version}})"
+login_failed = "Logowanie nieudane dla użytkownika {{.username}}: {{.error}}"
+reconnect_attempt = "Ponowne łączenie z {{.host}}, próba {{.attempt}}/{{.max}} (oczekiwanie {{.backoff}})"
+
+[jobs_processed]
+one = "Przetworzono {{.count}} zadanie"
+few = "Przetworzono {{.count}} zadania"
+many = "Przetworzono {{.count}} zadań"
+other = "Przetworzono {{.count}} zadania"

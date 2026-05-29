@@ -1,0 +1,9 @@
+{
+  "app_started": "Service {{.service}} started (version {{.version}})",
+  "login_failed": "Login failed for user {{.username}}: {{.error}}",
+  "reconnect_attempt": "Reconnecting to {{.host}}, attempt {{.attempt}}/{{.max}} (backoff {{.backoff}})",
+  "jobs_processed": {
+    "one": "Processed {{.count}} job",
+    "other": "Processed {{.count}} jobs"
+  }
+}

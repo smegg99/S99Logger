@@ -1,0 +1,5 @@
+[jobs_processed]
+one = "Przetworzono {{.count}} zadanie"
+few = "Przetworzono {{.count}} zadania"
+many = "Przetworzono {{.count}} zadań"
+other = "Przetworzono {{.count}} zadania"
