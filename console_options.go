@@ -1,3 +1,5 @@
+// console_options.go
+
 package s99logger
 
 import "strings"

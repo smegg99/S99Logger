@@ -1,3 +1,5 @@
+// attr.go
+
 package s99logger
 
 import "time"

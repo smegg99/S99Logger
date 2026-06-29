@@ -1,3 +1,5 @@
+// json.go
+
 package s99logger
 
 import (

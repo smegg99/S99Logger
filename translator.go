@@ -1,3 +1,5 @@
+// translator.go
+
 package s99logger
 
 import "context"

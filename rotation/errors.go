@@ -1,3 +1,5 @@
+// rotation/errors.go
+
 package rotation
 
 import "errors"

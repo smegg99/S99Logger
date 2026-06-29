@@ -1,3 +1,5 @@
+// nil.go
+
 package s99logger
 
 import "reflect"

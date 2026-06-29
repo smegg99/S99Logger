@@ -1,3 +1,5 @@
+// rotation/options.go
+
 package rotation
 
 import (

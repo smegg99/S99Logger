@@ -1,3 +1,5 @@
+// console.go
+
 package s99logger
 
 import (

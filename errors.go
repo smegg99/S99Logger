@@ -1,3 +1,5 @@
+// errors.go
+
 package s99logger
 
 import "errors"

@@ -1,3 +1,5 @@
+// log.go
+
 package s99logger
 
 import (

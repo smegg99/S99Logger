@@ -1,3 +1,5 @@
+// i18n/errors.go
+
 package i18n
 
 import "errors"

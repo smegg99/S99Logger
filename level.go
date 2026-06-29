@@ -1,3 +1,5 @@
+// level.go
+
 package s99logger
 
 // Level is the severity of a log record.

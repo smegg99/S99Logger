@@ -1,3 +1,5 @@
+// multi.go
+
 package s99logger
 
 import (

@@ -1,3 +1,5 @@
+// event.go
+
 package s99logger
 
 // MessageID is a stable, language-independent identifier for a log message.

@@ -1,3 +1,5 @@
+// i18n/verify.go
+
 package i18n
 
 import (

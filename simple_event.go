@@ -1,3 +1,5 @@
+// simple_event.go
+
 package s99logger
 
 // SimpleEvent is a small immutable Event implementation for common log events.
