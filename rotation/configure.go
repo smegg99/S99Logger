@@ -26,13 +26,16 @@ type Config struct {
 	// EnableFiles turns on the rotating file sink. When false (or Directory is
 	// empty) only the console sink is used.
 	EnableFiles bool
-	// Directory, Filename, MaxSizeMB, MaxBackups, MaxAgeDays configure the file
-	// sink; see Options for details.
-	Directory  string
-	Filename   string
-	MaxSizeMB  int
-	MaxBackups int
-	MaxAgeDays int
+	// Directory, Filename, MaxSizeMB, MaxBackups, MaxAgeDays, Compression and
+	// LocalTime configure the file sink; see Options for details. Compression
+	// defaults to "gzip" here rather than to timberjack's no-compression.
+	Directory   string
+	Filename    string
+	MaxSizeMB   int
+	MaxBackups  int
+	MaxAgeDays  int
+	Compression string
+	LocalTime   bool
 }
 
 // Configure builds a Logger from cfg and installs it as the s99logger default,
@@ -45,6 +48,11 @@ func Configure(cfg Config) error {
 	}
 	sinks := []s99logger.Sink{console}
 
+	compression := cfg.Compression
+	if compression == "" {
+		compression = "gzip"
+	}
+
 	var closers []io.Closer
 	if cfg.EnableFiles && cfg.Directory != "" {
 		file, err := New(Options{
@@ -53,8 +61,8 @@ func Configure(cfg Config) error {
 			MaxSizeMB:   cfg.MaxSizeMB,
 			MaxBackups:  cfg.MaxBackups,
 			MaxAgeDays:  cfg.MaxAgeDays,
-			Compression: "gzip",
-			LocalTime:   true,
+			Compression: compression,
+			LocalTime:   cfg.LocalTime,
 		})
 		if err != nil {
 			return err

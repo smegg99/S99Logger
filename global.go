@@ -78,6 +78,16 @@ func Warn(event Event, ctx ...context.Context) { Default().Warn(event, ctx...) }
 // Error logs event at error level on the default Logger.
 func Error(event Event, ctx ...context.Context) { Default().Error(event, ctx...) }
 
+// Fatal logs event at error level on the default Logger, releases its sinks so
+// the record reaches disk, and terminates the process with status 1. Deferred
+// functions do not run; reserve it for startup failures the application cannot
+// continue past.
+func Fatal(event Event, ctx ...context.Context) {
+	Default().Error(event, ctx...)
+	_ = Close()
+	os.Exit(1)
+}
+
 // ParseLevel maps a case-insensitive level name to a Level, defaulting to
 // LevelInfo for empty or unrecognized input. TRACE maps to debug; FATAL and
 // PANIC map to error.

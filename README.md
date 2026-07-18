@@ -61,6 +61,10 @@ value (e.g. to derive a request-scoped child with `With`), and `SetDefault`
 swaps it directly when you build sinks yourself. The default is usable before
 configuration: it writes to stderr at debug level.
 
+`Fatal` logs at error level, releases the sinks so the record reaches disk, and
+exits with status 1. Deferred functions do not run, so keep it to startup
+failures the application cannot continue past.
+
 Use `examples/` for complete, runnable code.
 
 ## Examples
