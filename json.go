@@ -89,7 +89,8 @@ func jsonValue(v any) any {
 	case time.Duration:
 		return v.String()
 	case error:
-		return v.Error()
+		// Sprint, not Error: a typed nil error would panic.
+		return fmt.Sprint(v)
 	}
 	return v
 }

@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"io/fs"
 	"math"
 	"strings"
 	"testing"
@@ -82,5 +83,18 @@ func TestJSONKeepsARecordWithAnAttributeThatCannotMarshal(t *testing.T) {
 	line := buf.String()
 	if !strings.Contains(line, `"err":"disk full"`) || !strings.Contains(line, `"ratio":"NaN"`) {
 		t.Fatalf("line = %q, want the error text and NaN as text", line)
+	}
+}
+
+func TestJSONWritesATypedNilErrorWithoutPanicking(t *testing.T) {
+	var buf bytes.Buffer
+	logger := s99logger.New(s99logger.NewJSONSink(&buf), s99logger.Options{})
+	var err *fs.PathError
+
+	logger.Info(event{id: "open", attrs: []s99logger.Attr{s99logger.Any("err", err)}})
+
+	var line map[string]any
+	if err := json.Unmarshal(buf.Bytes(), &line); err != nil || line["err"] != "<nil>" {
+		t.Fatalf("line = %q, want the nil error as text", buf.String())
 	}
 }
