@@ -9,7 +9,7 @@ stable machine fields such as `message_id` and `service`.
 ## Features
 
 - Typed app-owned events.
-- Console, JSON, and multi-sink in the core package.
+- Console, JSON, and multi-sink in the core package; `MinLevel` gives each sink its own level.
 - Process-wide default logger with a one-call `rotation.Configure` setup.
 - Integrated i18n and log rotation.
 - Configurable console prefixes, service prefix, and colors.
