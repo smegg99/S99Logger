@@ -4,6 +4,9 @@ package tests
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
+	"math"
+	"strings"
 	"testing"
 	"time"
 
@@ -65,4 +68,19 @@ func TestJSONSinkNilWriterDiscards(t *testing.T) {
 	logger := s99logger.New(s99logger.NewJSONSink(nil), s99logger.Options{})
 
 	logger.Info(event{id: "discarded"})
+}
+
+func TestJSONKeepsARecordWithAnAttributeThatCannotMarshal(t *testing.T) {
+	var buf bytes.Buffer
+	logger := s99logger.New(s99logger.NewJSONSink(&buf), s99logger.Options{})
+
+	logger.Info(event{id: "disk", attrs: []s99logger.Attr{
+		s99logger.Any("ratio", math.NaN()),
+		s99logger.Any("err", errors.New("disk full")),
+	}})
+
+	line := buf.String()
+	if !strings.Contains(line, `"err":"disk full"`) || !strings.Contains(line, `"ratio":"NaN"`) {
+		t.Fatalf("line = %q, want the error text and NaN as text", line)
+	}
 }

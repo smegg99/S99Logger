@@ -90,3 +90,60 @@ func TestRotatingSinkRejectsInvalidRotateAt(t *testing.T) {
 		t.Fatal("expected an error when RotateAt is invalid")
 	}
 }
+
+func TestRotationDropsWritesAfterClose(t *testing.T) {
+	logDir := filepath.Join(t.TempDir(), "logs")
+	sink, err := rotation.New(rotation.Options{Directory: logDir, Filename: "service.log"})
+	if err != nil {
+		t.Fatalf("rotation.New: %v", err)
+	}
+	logger := s99logger.New(sink, s99logger.Options{})
+	logger.Info(event{id: "before"})
+	if err := sink.Close(); err != nil {
+		t.Fatalf("Close: %v", err)
+	}
+	path := filepath.Join(logDir, "service.log")
+	before, err := os.Stat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	logger.Info(event{id: "after"})
+
+	after, err := os.Stat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if after.Size() != before.Size() {
+		t.Fatalf("size %d -> %d, want a closed sink to drop the write", before.Size(), after.Size())
+	}
+}
+
+func TestRotationCreatesItsDirectoryPrivate(t *testing.T) {
+	logDir := filepath.Join(t.TempDir(), "logs")
+	sink, err := rotation.New(rotation.Options{Directory: logDir, Filename: "service.log"})
+	if err != nil {
+		t.Fatalf("rotation.New: %v", err)
+	}
+	t.Cleanup(func() { _ = sink.Close() })
+
+	info, err := os.Stat(logDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if perm := info.Mode().Perm(); perm != 0o750 {
+		t.Fatalf("directory mode = %o, want 750", perm)
+	}
+}
+
+func TestConfigureRejectsAnUnknownLevel(t *testing.T) {
+	prev := s99logger.Default()
+	t.Cleanup(func() { s99logger.SetDefault(prev) })
+
+	if err := rotation.Configure(rotation.Config{Level: "verbose"}); err == nil {
+		t.Fatal("Configure accepted the level \"verbose\"")
+	}
+	if s99logger.Default() != prev {
+		t.Fatal("a refused Configure replaced the default logger")
+	}
+}

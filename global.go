@@ -31,8 +31,11 @@ func Default() *Logger {
 // SetDefault installs l as the process-wide Logger. Any sinks that need cleanup
 // at shutdown (such as file sinks) should be passed as sinkClosers; they are
 // closed by Close. Closers registered by a previous SetDefault are closed here,
-// so reconfiguring the logger releases the old file handles.
+// so reconfiguring the logger releases the old file handles. A nil l is ignored.
 func SetDefault(l *Logger, sinkClosers ...io.Closer) {
+	if l == nil {
+		return
+	}
 	mu.Lock()
 	old := closers
 	global = l
@@ -88,20 +91,17 @@ func Fatal(event Event, ctx ...context.Context) {
 	os.Exit(1)
 }
 
-// ParseLevel maps a case-insensitive level name to a Level, defaulting to
-// LevelInfo for empty or unrecognized input. TRACE maps to debug; FATAL and
-// PANIC map to error.
-func ParseLevel(name string) Level {
-	switch strings.ToUpper(strings.TrimSpace(name)) {
-	case "TRACE", "DEBUG":
-		return LevelDebug
-	case "INFO", "":
-		return LevelInfo
-	case "WARN", "WARNING":
-		return LevelWarn
-	case "ERROR", "FATAL", "PANIC":
-		return LevelError
-	default:
-		return LevelInfo
+// ParseLevel reads debug, info, warn, warning or error in any case; ok is false otherwise.
+func ParseLevel(name string) (level Level, ok bool) {
+	switch strings.ToLower(strings.TrimSpace(name)) {
+	case "debug":
+		return LevelDebug, true
+	case "info":
+		return LevelInfo, true
+	case "warn", "warning":
+		return LevelWarn, true
+	case "error":
+		return LevelError, true
 	}
+	return LevelInfo, false
 }

@@ -12,6 +12,7 @@ import (
 	"fmt"
 
 	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
+	"github.com/nicksnyder/go-i18n/v2/i18n/template"
 	"golang.org/x/text/language"
 
 	"github.com/smegg99/s99logger"
@@ -51,6 +52,8 @@ func New(opts Options) (*Translator, error) {
 	return &Translator{bundle: bundle, defaultLang: opts.DefaultLanguage}, nil
 }
 
+var missingKeyError = &template.TextParser{Option: "missingkey=error"}
+
 // Translate localizes event for lang, falling back to the default language.
 // Event attrs are passed as template data and the plural count, when present,
 // drives plural selection.
@@ -66,6 +69,8 @@ func (t *Translator) Translate(_ context.Context, lang string, event s99logger.E
 	cfg := &goi18n.LocalizeConfig{
 		MessageID:    string(event.MessageID()),
 		TemplateData: data,
+		// A missing attr is an error, so the logger falls back to the id instead of "<no value>".
+		TemplateParser: missingKeyError,
 	}
 	if count, ok := event.PluralCount(); ok {
 		cfg.PluralCount = count

@@ -103,3 +103,37 @@ type typedNilEvent struct{}
 func (*typedNilEvent) MessageID() s99logger.MessageID { return "nil" }
 func (*typedNilEvent) Attrs() []s99logger.Attr        { return nil }
 func (*typedNilEvent) PluralCount() (int, bool)       { return 0, false }
+
+func TestSetDefaultIgnoresNil(t *testing.T) {
+	prev := s99logger.Default()
+	t.Cleanup(func() { s99logger.SetDefault(prev) })
+	l := s99logger.New(&captureSink{}, s99logger.Options{})
+	s99logger.SetDefault(l)
+
+	s99logger.SetDefault(nil)
+
+	if s99logger.Default() != l {
+		t.Fatal("SetDefault(nil) replaced the default logger")
+	}
+}
+
+func TestParseLevel(t *testing.T) {
+	cases := []struct {
+		name  string
+		level s99logger.Level
+		ok    bool
+	}{
+		{"warning", s99logger.LevelWarn, true},
+		{" DEBUG ", s99logger.LevelDebug, true},
+		{"Info", s99logger.LevelInfo, true},
+		{"error", s99logger.LevelError, true},
+		{"verbose", 0, false},
+		{"", 0, false},
+	}
+	for _, c := range cases {
+		level, ok := s99logger.ParseLevel(c.name)
+		if ok != c.ok || (ok && level != c.level) {
+			t.Errorf("ParseLevel(%q) = %v, %v; want %v, %v", c.name, level, ok, c.level, c.ok)
+		}
+	}
+}

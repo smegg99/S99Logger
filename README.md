@@ -61,6 +61,17 @@ value (e.g. to derive a request-scoped child with `With`), and `SetDefault`
 swaps it directly when you build sinks yourself. The default is usable before
 configuration: it writes to stderr at debug level.
 
+`ParseLevel` reads a level name from config or flags: `debug`, `info`, `warn`
+(or `warning`) and `error`, trimmed and in any case. It reports `false` for
+anything else, so a typo is an error, not a silent info; `rotation.Configure`
+returns that error for an unknown `Level`. `MinLevel(sink, level)` wraps one
+sink so it drops records below its own level, for example a console at info
+beside a debug file.
+
+Attributes that JSON cannot encode (a NaN, a channel) are written as text, and
+errors as their message, so the record is never lost. A rotating sink drops
+writes after `Close`.
+
 `Fatal` logs at error level, releases the sinks so the record reaches disk, and
 exits with status 1. Deferred functions do not run, so keep it to startup
 failures the application cannot continue past.

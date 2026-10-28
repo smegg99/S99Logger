@@ -60,7 +60,18 @@ func (s *JSONSink) Write(_ context.Context, rec Record) error {
 
 	data, err := json.Marshal(obj)
 	if err != nil {
-		return fmt.Errorf("%w: %w", errMarshalRecord, err)
+		// One bad attribute (a NaN, a channel) must not lose the record: write it as text.
+		for _, a := range rec.Attrs {
+			if _, ok := reservedKeys[a.Key]; ok {
+				continue
+			}
+			if _, err := json.Marshal(obj[a.Key]); err != nil {
+				obj[a.Key] = fmt.Sprint(a.Value)
+			}
+		}
+		if data, err = json.Marshal(obj); err != nil {
+			return fmt.Errorf("%w: %w", errMarshalRecord, err)
+		}
 	}
 	data = append(data, '\n')
 
@@ -72,11 +83,13 @@ func (s *JSONSink) Write(_ context.Context, rec Record) error {
 	return nil
 }
 
-// jsonValue normalizes attribute values for JSON output. Durations are written
-// as text so they match how they render in translation templates.
+// jsonValue writes durations and errors as text, as they render in translation templates.
 func jsonValue(v any) any {
-	if d, ok := v.(time.Duration); ok {
-		return d.String()
+	switch v := v.(type) {
+	case time.Duration:
+		return v.String()
+	case error:
+		return v.Error()
 	}
 	return v
 }

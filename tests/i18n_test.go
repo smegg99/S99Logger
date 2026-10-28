@@ -6,6 +6,7 @@ import (
 	"embed"
 	"strings"
 	"testing"
+	"testing/fstest"
 
 	"github.com/BurntSushi/toml"
 	"github.com/smegg99/s99logger"
@@ -155,5 +156,24 @@ func TestI18nMissingFSReturnsError(t *testing.T) {
 func TestI18nInvalidDefaultLanguageReturnsError(t *testing.T) {
 	if _, err := i18n.New(i18n.Options{DefaultLanguage: "", FS: localesFS}); err == nil {
 		t.Fatal("expected error for invalid default language")
+	}
+}
+
+func TestMissingTemplateDataFallsBackToTheID(t *testing.T) {
+	tr, err := i18n.New(i18n.Options{
+		DefaultLanguage: "en",
+		FS:              fstest.MapFS{"en.json": {Data: []byte(`{"joined": "{{.name}} joined"}`)}},
+		Files:           []string{"en.json"},
+	})
+	if err != nil {
+		t.Fatalf("i18n.New: %v", err)
+	}
+	sink := &captureSink{}
+	logger := s99logger.New(sink, s99logger.Options{Translator: tr})
+
+	logger.Info(event{id: "joined"})
+
+	if len(sink.records) != 1 || sink.records[0].Message != "joined" {
+		t.Fatalf("records = %+v, want the message id", sink.records)
 	}
 }

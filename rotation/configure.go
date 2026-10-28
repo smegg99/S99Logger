@@ -3,6 +3,7 @@
 package rotation
 
 import (
+	"fmt"
 	"io"
 	"os"
 
@@ -15,7 +16,7 @@ import (
 type Config struct {
 	// Service is the service name attached to every record. Defaults to "app".
 	Service string
-	// Level is the minimum level name (see s99logger.ParseLevel). Ignored when
+	// Level is the minimum level name (see s99logger.ParseLevel), info when empty. Ignored when
 	// Verbose is set.
 	Level string
 	// Verbose forces debug level regardless of Level.
@@ -40,8 +41,19 @@ type Config struct {
 
 // Configure builds a Logger from cfg and installs it as the s99logger default,
 // registering the file sink (if any) so s99logger.Close releases it at
-// shutdown. It returns any error from setting up the file sink.
+// shutdown. It returns an error for an unknown Level or a file sink that cannot be set up.
 func Configure(cfg Config) error {
+	level := s99logger.LevelInfo
+	switch {
+	case cfg.Verbose:
+		level = s99logger.LevelDebug
+	case cfg.Level != "":
+		var ok bool
+		if level, ok = s99logger.ParseLevel(cfg.Level); !ok {
+			return fmt.Errorf("%w: %q", errLevelUnknown, cfg.Level)
+		}
+	}
+
 	console := s99logger.NewConsoleSink(os.Stderr)
 	if cfg.NoColor {
 		console.WithColor(false)
@@ -69,11 +81,6 @@ func Configure(cfg Config) error {
 		}
 		sinks = append(sinks, file)
 		closers = append(closers, file)
-	}
-
-	level := s99logger.ParseLevel(cfg.Level)
-	if cfg.Verbose {
-		level = s99logger.LevelDebug
 	}
 
 	service := cfg.Service

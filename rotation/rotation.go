@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"github.com/DeRuina/timberjack"
 
@@ -19,6 +20,10 @@ import (
 type Sink struct {
 	json   *s99logger.JSONSink
 	logger *timberjack.Logger
+
+	// mu orders writes before Close: timberjack would reopen the file for a write after it.
+	mu     sync.RWMutex
+	closed bool
 }
 
 var _ s99logger.Sink = (*Sink)(nil)
@@ -31,7 +36,7 @@ func New(opts Options) (*Sink, error) {
 		return nil, err
 	}
 
-	if err := os.MkdirAll(opts.Directory, 0o755); err != nil {
+	if err := os.MkdirAll(opts.Directory, 0o750); err != nil {
 		return nil, fmt.Errorf("create log directory %q: %w", opts.Directory, err)
 	}
 
@@ -53,13 +58,21 @@ func New(opts Options) (*Sink, error) {
 }
 
 // Write encodes rec as a single JSON object and writes it to the active log
-// file.
+// file. After Close it drops rec.
 func (s *Sink) Write(ctx context.Context, rec s99logger.Record) error {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	if s.closed {
+		return nil
+	}
 	return s.json.Write(ctx, rec)
 }
 
-// Close closes the underlying timberjack logger.
+// Close closes the underlying timberjack logger; later writes are dropped.
 func (s *Sink) Close() error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.closed = true
 	return s.logger.Close()
 }
 
