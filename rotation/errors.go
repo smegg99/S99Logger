@@ -14,4 +14,5 @@ var (
 	errFilenamePath       = errors.New("rotation: Filename must be a file name, not a path")
 	errRotateAtInvalid    = errors.New("rotation: RotateAt must use HH:MM 24-hour time")
 	errLevelUnknown       = errors.New("rotation: unknown log level")
+	errCompressionUnknown = errors.New("rotation: Compression must be none, gzip or zstd")
 )

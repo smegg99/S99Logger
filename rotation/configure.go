@@ -28,8 +28,7 @@ type Config struct {
 	// empty) only the console sink is used.
 	EnableFiles bool
 	// Directory, Filename, MaxSizeMB, MaxBackups, MaxAgeDays, Compression and
-	// LocalTime configure the file sink; see Options for details. Compression
-	// defaults to "gzip" here rather than to timberjack's no-compression.
+	// LocalTime configure the file sink; see Options for details.
 	Directory   string
 	Filename    string
 	MaxSizeMB   int
@@ -60,11 +59,6 @@ func Configure(cfg Config) error {
 	}
 	sinks := []s99logger.Sink{console}
 
-	compression := cfg.Compression
-	if compression == "" {
-		compression = "gzip"
-	}
-
 	var closers []io.Closer
 	if cfg.EnableFiles && cfg.Directory != "" {
 		file, err := New(Options{
@@ -73,7 +67,7 @@ func Configure(cfg Config) error {
 			MaxSizeMB:   cfg.MaxSizeMB,
 			MaxBackups:  cfg.MaxBackups,
 			MaxAgeDays:  cfg.MaxAgeDays,
-			Compression: compression,
+			Compression: cfg.Compression,
 			LocalTime:   cfg.LocalTime,
 		})
 		if err != nil {

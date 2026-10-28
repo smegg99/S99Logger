@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	defaultFilename = "app.log"
-	defaultRotateAt = "00:00"
+	defaultFilename    = "app.log"
+	defaultRotateAt    = "00:00"
+	defaultCompression = "gzip"
 )
 
 // Options configures a JSON log file that is rotated once per day. Directory
@@ -34,8 +35,7 @@ type Options struct {
 	// MaxBackups is the maximum number of rotated files to retain. Zero keeps
 	// all backups unless MaxAgeDays removes them.
 	MaxBackups int
-	// Compression may be "none", "gzip", or "zstd". Empty uses timberjack's
-	// default of no compression.
+	// Compression may be "none", "gzip", or "zstd". It defaults to "gzip".
 	Compression string
 	// LocalTime makes rotation times and backup filenames use local time instead
 	// of UTC.
@@ -75,6 +75,14 @@ func normalizeOptions(opts Options) (Options, error) {
 	}
 	if _, err := time.Parse("15:04", opts.RotateAt); err != nil {
 		return Options{}, fmt.Errorf("%w: %v", errRotateAtInvalid, err)
+	}
+
+	switch opts.Compression {
+	case "":
+		opts.Compression = defaultCompression
+	case "none", "gzip", "zstd":
+	default:
+		return Options{}, fmt.Errorf("%w: %q", errCompressionUnknown, opts.Compression)
 	}
 
 	return opts, nil
