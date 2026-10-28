@@ -9,6 +9,7 @@ stable machine fields such as `message_id` and `service`.
 ## Features
 
 - Typed app-owned events.
+- A `log/slog` handler for libraries that log through slog.
 - Console, JSON, and multi-sink in the core package; `MinLevel` gives each sink its own level.
 - Process-wide default logger with a one-call `rotation.Configure` setup.
 - Integrated i18n and log rotation.
@@ -77,6 +78,32 @@ exits with status 1. Deferred functions do not run, so keep it to startup
 failures the application cannot continue past.
 
 Use `examples/` for complete, runnable code.
+
+## Sinks
+
+A `Sink` receives each resolved `Record`. Every sink here is safe for
+concurrent use, and the logger discards a sink's error.
+
+| Sink | Writes |
+| --- | --- |
+| `NewConsoleSink(w)` | one human-readable line per record; colored only when `w` is a terminal |
+| `NewJSONSink(w)` | one JSON object per line, time in UTC RFC 3339 |
+| `MultiSink(sinks...)` | every record to each sink |
+| `MinLevel(sink, level)` | records at `level` or above to `sink` |
+| `rotation.New(opts)` | JSON to `opts.Directory/opts.Filename`, rotated daily at `RotateAt` and by `MaxSizeMB`; old files compressed with `gzip` unless `Compression` says `none` or `zstd`; writes after `Close` are dropped |
+
+`rotation.Configure` uses the same defaults as `rotation.New`.
+
+## slog
+
+`Logger.SlogHandler(id)` adapts the logger for libraries that log through
+`log/slog`, such as Wails. Each slog record becomes event `id` with the slog
+message under `detail`; slog groups become dotted keys, and errors their text.
+`Logger.Enabled(level)` reports whether a record at `level` would be written.
+
+```go
+slog.SetDefault(slog.New(s99logger.Default().SlogHandler("runtime")))
+```
 
 ## Examples
 
