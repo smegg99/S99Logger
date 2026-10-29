@@ -10,9 +10,7 @@ import (
 	"github.com/smegg99/s99logger"
 )
 
-// Config describes a console logger with an optional rotating JSON file sink.
-// It is the high-level input to Configure, which most applications use instead
-// of wiring sinks by hand.
+// Config is Configure's input: a console logger with an optional rotating JSON file.
 type Config struct {
 	// Service is the service name attached to every record. Defaults to "app".
 	Service string
@@ -38,9 +36,7 @@ type Config struct {
 	LocalTime   bool
 }
 
-// Configure builds a Logger from cfg and installs it as the s99logger default,
-// registering the file sink (if any) so s99logger.Close releases it at
-// shutdown. It returns an error for an unknown Level or a file sink that cannot be set up.
+// Configure builds a Logger from cfg and installs it as the default, registering the file sink for s99logger.Close.
 func Configure(cfg Config) error {
 	level := s99logger.LevelInfo
 	switch {

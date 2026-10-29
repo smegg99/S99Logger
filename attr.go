@@ -4,8 +4,7 @@ package s99logger
 
 import "time"
 
-// Attr is a single structured key/value pair attached to an event. Attrs are
-// emitted in the log record and are also used as template data by translators.
+// Attr is one key/value pair on an event, emitted in the record and passed to translators as template data.
 type Attr struct {
 	Key   string
 	Value any
@@ -20,8 +19,7 @@ func Int(key string, value int) Attr { return Attr{Key: key, Value: value} }
 // Bool returns a boolean attribute.
 func Bool(key string, value bool) Attr { return Attr{Key: key, Value: value} }
 
-// Duration returns a duration attribute. The duration renders as text (e.g.
-// "1.5s") both in log output and in translation templates.
+// Duration returns a duration attribute, rendered as text such as "1.5s" in logs and templates.
 func Duration(key string, value time.Duration) Attr { return Attr{Key: key, Value: value} }
 
 // Err returns an attribute carrying an error message under the "error" key.

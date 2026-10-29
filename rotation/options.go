@@ -15,8 +15,7 @@ const (
 	defaultCompression = "gzip"
 )
 
-// Options configures a JSON log file that is rotated once per day. Directory
-// is required so applications explicitly choose where logs live.
+// Options configures a daily-rotated JSON log file; Directory is required.
 type Options struct {
 	// Directory is created if needed and receives the active and rotated logs.
 	Directory string

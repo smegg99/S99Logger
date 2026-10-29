@@ -14,9 +14,7 @@ import (
 	"github.com/smegg99/s99logger"
 )
 
-// Sink writes newline-delimited JSON to a timberjack-managed file. Close it
-// when the application shuts down so timberjack can release file handles and
-// stop scheduled rotation work.
+// Sink writes newline-delimited JSON to a timberjack file; close it at shutdown to stop rotation work.
 type Sink struct {
 	json   *s99logger.JSONSink
 	logger *timberjack.Logger
@@ -28,8 +26,7 @@ type Sink struct {
 
 var _ s99logger.Sink = (*Sink)(nil)
 
-// New returns a JSON sink backed by timberjack. The active log file is
-// opts.Filename inside opts.Directory and is rotated every day.
+// New returns a timberjack JSON sink writing opts.Filename in opts.Directory, rotated daily.
 func New(opts Options) (*Sink, error) {
 	opts, err := normalizeOptions(opts)
 	if err != nil {
@@ -57,8 +54,7 @@ func New(opts Options) (*Sink, error) {
 	}, nil
 }
 
-// Write encodes rec as a single JSON object and writes it to the active log
-// file. After Close it drops rec.
+// Write writes rec as one JSON object; after Close it drops rec.
 func (s *Sink) Write(ctx context.Context, rec s99logger.Record) error {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
@@ -86,8 +82,7 @@ func (s *Sink) Rotate() error {
 	return s.logger.Rotate()
 }
 
-// rotateWithReason forces an immediate rotation and tags the backup filename
-// with reason after timberjack sanitizes it.
+// rotateWithReason rotates now and tags the backup filename with the sanitized reason.
 func (s *Sink) rotateWithReason(reason string) error {
 	return s.logger.RotateWithReason(reason)
 }

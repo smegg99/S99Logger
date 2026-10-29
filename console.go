@@ -14,10 +14,7 @@ import (
 	"unicode/utf8"
 )
 
-// ConsoleSink writes human-readable, optionally colored lines, suited for the
-// terminal. Color is auto-enabled when the writer is a terminal. Level prefixes
-// and colors can be customized, including per-language prefixes selected from
-// each record's language. It is safe for concurrent use.
+// ConsoleSink writes human-readable lines, colored on a terminal, with per-language level prefixes; safe for concurrent use.
 type ConsoleSink struct {
 	mu            sync.Mutex
 	out           io.Writer
@@ -31,8 +28,7 @@ type ConsoleSink struct {
 	fieldColor    string
 }
 
-// NewConsoleSink returns a ConsoleSink writing to w. Color is enabled only when
-// w is a terminal.
+// NewConsoleSink returns a ConsoleSink writing to w, colored only when w is a terminal.
 func NewConsoleSink(w io.Writer) *ConsoleSink {
 	if w == nil {
 		w = io.Discard
@@ -88,8 +84,7 @@ func (s *ConsoleSink) Write(_ context.Context, rec Record) error {
 	return nil
 }
 
-// writeLevel writes the configured level prefix, padded to a fixed width and
-// colored when color is enabled.
+// writeLevel writes the level prefix padded to a fixed width, colored when color is on.
 func (s *ConsoleSink) writeLevel(b *strings.Builder, lang string, level Level) {
 	prefix := padLevelPrefix(s.levelPrefix(lang, level))
 	color := s.levelColor(lang, level)
@@ -102,8 +97,7 @@ func (s *ConsoleSink) writeLevel(b *strings.Builder, lang string, level Level) {
 	b.WriteString(prefix)
 }
 
-// writeService writes the service as a prefix segment instead of a structured
-// field, keeping the console line scannable while JSON keeps service as data.
+// writeService writes the service as a line prefix; JSON keeps it as a field.
 func (s *ConsoleSink) writeService(b *strings.Builder, service string) {
 	if s.color && s.serviceColor != "" {
 		b.WriteString(s.serviceColor)
@@ -161,8 +155,7 @@ func padLevelPrefix(prefix string) string {
 	return prefix
 }
 
-// writeField appends a " key=value" pair, quoting values that contain spaces
-// and dimming the key when color is enabled.
+// writeField appends " key=value", quoting values with spaces and dimming the key when color is on.
 func (s *ConsoleSink) writeField(b *strings.Builder, key, value string) {
 	if strings.ContainsAny(value, " \t\r\n\"") {
 		value = strconv.Quote(value)

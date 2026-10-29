@@ -2,14 +2,10 @@
 
 package s99logger
 
-// MessageID is a stable, language-independent identifier for a log message.
-// It is always emitted alongside the localized message, and is used as the
-// fallback message when no translator is configured or translation fails.
+// MessageID is a stable, language-independent message id, emitted beside the text and used as the text when translation fails.
 type MessageID string
 
-// Event is a typed log event. Most simple events can use NewEvent or
-// NewPluralEvent; applications can still define structs implementing this
-// interface when they want stronger domain types or custom behavior.
+// Event is a typed log event; NewEvent and NewPluralEvent cover the simple cases.
 type Event interface {
 	// MessageID returns the stable identifier for this event.
 	MessageID() MessageID
@@ -20,8 +16,7 @@ type Event interface {
 	PluralCount() (int, bool)
 }
 
-// NoPlural can be embedded in event structs that are not pluralized, so they
-// satisfy Event without implementing PluralCount themselves.
+// NoPlural lets an event struct satisfy Event without a PluralCount of its own.
 type NoPlural struct{}
 
 // PluralCount reports that the event is not pluralized.

@@ -1,3 +1,4 @@
-// Package rotation provides optional timberjack-backed JSON log rotation for
-// s99logger.
+// rotation/doc.go
+
+// Package rotation is a timberjack-backed, daily-rotated JSON file sink for s99logger.
 package rotation

@@ -11,10 +11,7 @@ import (
 	"github.com/smegg99/s99logger"
 )
 
-// Verify reports every (lang, id) combination that has no translation, checking
-// each language independently without falling back to the default. Call it from
-// a test with your event ids so a missing or mistyped translation fails the
-// build instead of silently degrading to the message id in production.
+// Verify lists every (lang, id) with no translation, without falling back; call it from a test so a missing one fails the build.
 func (t *Translator) Verify(langs []string, ids ...s99logger.MessageID) error {
 	var missing []string
 	for _, lang := range langs {

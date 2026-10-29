@@ -4,8 +4,7 @@ package s99logger
 
 import "context"
 
-// MinLevel returns a Sink that passes on records at min or above, so one logger can feed
-// sinks at different levels. Run the logger at the lowest level any sink needs.
+// MinLevel passes on records at min or above, so one logger at the lowest level can feed sinks at different levels.
 func MinLevel(sink Sink, min Level) Sink {
 	if isNilInterface(sink) {
 		return nil

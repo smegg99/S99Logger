@@ -7,8 +7,7 @@ import (
 	"github.com/smegg99/s99logger"
 )
 
-// event is a configurable Event used across the test suite. Set plural to true
-// to exercise pluralized translation.
+// event is a configurable Event for the suite; plural exercises plural translation.
 type event struct {
 	id     s99logger.MessageID
 	attrs  []s99logger.Attr

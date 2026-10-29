@@ -1,9 +1,6 @@
 // i18n/i18n.go
 
-// Package i18n is the official go-i18n adapter for s99logger. It loads locale
-// files from any fs.FS (including embed.FS) into a go-i18n bundle and
-// implements s99logger.Translator, using event attrs as template data and the
-// event plural count for plural selection.
+// Package i18n is the go-i18n adapter for s99logger, loading locale files from any fs.FS.
 package i18n
 
 import (
@@ -18,8 +15,7 @@ import (
 	"github.com/smegg99/s99logger"
 )
 
-// Translator loads locale files into a go-i18n bundle and implements
-// s99logger.Translator. It holds no global state.
+// Translator loads locale files into a go-i18n bundle and implements s99logger.Translator.
 type Translator struct {
 	bundle      *goi18n.Bundle
 	defaultLang string
@@ -54,9 +50,7 @@ func New(opts Options) (*Translator, error) {
 
 var missingKeyError = &template.TextParser{Option: "missingkey=error"}
 
-// Translate localizes event for lang, falling back to the default language.
-// Event attrs are passed as template data and the plural count, when present,
-// drives plural selection.
+// Translate localizes event for lang with the default language as fallback; attrs are template data and the plural count picks the form.
 func (t *Translator) Translate(_ context.Context, lang string, event s99logger.Event) (string, error) {
 	localizer := goi18n.NewLocalizer(t.bundle, lang, t.defaultLang)
 

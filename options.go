@@ -4,8 +4,7 @@ package s99logger
 
 import "time"
 
-// Options configures a Logger. The zero value is usable: Clock defaults to
-// time.Now and Translator may be nil (messages fall back to the message id).
+// Options configures a Logger; the zero value works, with time.Now and untranslated message ids.
 type Options struct {
 	// Language is the default target language passed to the Translator. It can
 	// be overridden per call with ContextWithLanguage.

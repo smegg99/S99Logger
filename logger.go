@@ -4,9 +4,7 @@ package s99logger
 
 import "time"
 
-// Logger emits typed events to a Sink, optionally localizing them through a
-// Translator. A Logger holds no global state and is safe for concurrent use
-// as long as its Sink is.
+// Logger emits typed events to a Sink, optionally translated; safe for concurrent use when its Sink is.
 type Logger struct {
 	sink       Sink
 	translator Translator
@@ -17,8 +15,7 @@ type Logger struct {
 	clock      func() time.Time
 }
 
-// New returns a Logger that writes to sink using the given options. A nil sink
-// discards records.
+// New returns a Logger writing to sink; a nil sink discards records.
 func New(sink Sink, opts Options) *Logger {
 	clock := opts.Clock
 	if clock == nil {
@@ -34,9 +31,7 @@ func New(sink Sink, opts Options) *Logger {
 	}
 }
 
-// With returns a child Logger that attaches attrs to every record it emits, in
-// addition to each event's own attrs. The receiver is unchanged, so it is safe
-// to derive request- or scope-specific loggers concurrently.
+// With returns a child Logger that adds attrs to every record; the receiver is unchanged.
 func (l *Logger) With(attrs ...Attr) *Logger {
 	if len(attrs) == 0 {
 		return l
@@ -48,8 +43,7 @@ func (l *Logger) With(attrs ...Attr) *Logger {
 	return &cp
 }
 
-// mergeAttrs prepends the logger's base attrs (from With) to the event's attrs.
-// When there are no base attrs it returns the event's slice unchanged.
+// mergeAttrs prepends the base attrs from With to the event's attrs.
 func (l *Logger) mergeAttrs(eventAttrs []Attr) []Attr {
 	if len(l.base) == 0 {
 		return eventAttrs

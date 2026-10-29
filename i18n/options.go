@@ -8,8 +8,7 @@ import (
 	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
-// Decoder unmarshals a locale file of some format into go-i18n messages. It is
-// the same signature go-i18n uses, re-exported so callers need not import it.
+// Decoder unmarshals a locale file into go-i18n messages; go-i18n's own signature.
 type Decoder = goi18n.UnmarshalFunc
 
 // Options configures the Translator.

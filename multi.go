@@ -7,9 +7,7 @@ import (
 	"errors"
 )
 
-// MultiSink returns a Sink that writes each record to every given sink. This is
-// the usual way to send colored lines to the terminal and JSON to a file at the
-// same time. Sink errors are joined; the Logger discards them anyway.
+// MultiSink writes each record to every sink and joins their errors.
 func MultiSink(sinks ...Sink) Sink {
 	clean := make([]Sink, 0, len(sinks))
 	for _, sink := range sinks {

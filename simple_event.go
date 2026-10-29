@@ -2,9 +2,7 @@
 
 package s99logger
 
-// SimpleEvent is a small immutable Event implementation for common log events.
-// Use NewEvent or NewPluralEvent when a dedicated event struct would only
-// repeat the message id and attrs.
+// SimpleEvent is an immutable Event for events that need no struct of their own.
 type SimpleEvent struct {
 	id          MessageID
 	attrs       []Attr
@@ -19,8 +17,7 @@ func NewEvent(id MessageID, attrs ...Attr) SimpleEvent {
 	return SimpleEvent{id: id, attrs: cloneAttrs(attrs)}
 }
 
-// NewPluralEvent returns an event whose count drives plural translation
-// selection.
+// NewPluralEvent returns an event whose count selects the plural form.
 func NewPluralEvent(id MessageID, count int, attrs ...Attr) SimpleEvent {
 	return SimpleEvent{
 		id:          id,

@@ -42,14 +42,12 @@ func (s *ConsoleSink) WithColor(on bool) *ConsoleSink {
 	return s
 }
 
-// WithLevelPrefixes sets default console prefixes. Missing levels keep their
-// existing prefix.
+// WithLevelPrefixes sets default console prefixes; missing levels keep theirs.
 func (s *ConsoleSink) WithLevelPrefixes(prefixes map[Level]string) *ConsoleSink {
 	return s.WithLocalizedLevelPrefixes("", prefixes)
 }
 
-// withLocalizedLevelPrefix sets the console prefix for level when a record uses
-// lang. An empty lang configures the default prefix.
+// withLocalizedLevelPrefix sets the prefix for level when a record uses lang; an empty lang sets the default.
 func (s *ConsoleSink) withLocalizedLevelPrefix(lang string, level Level, prefix string) *ConsoleSink {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -62,8 +60,7 @@ func (s *ConsoleSink) withLocalizedLevelPrefix(lang string, level Level, prefix 
 	return s
 }
 
-// WithLocalizedLevelPrefixes sets console prefixes for records using lang.
-// Missing levels keep their existing prefix.
+// WithLocalizedLevelPrefixes sets console prefixes for records in lang; missing levels keep theirs.
 func (s *ConsoleSink) WithLocalizedLevelPrefixes(lang string, prefixes map[Level]string) *ConsoleSink {
 	for level, prefix := range prefixes {
 		s.withLocalizedLevelPrefix(lang, level, prefix)
@@ -71,14 +68,12 @@ func (s *ConsoleSink) WithLocalizedLevelPrefixes(lang string, prefixes map[Level
 	return s
 }
 
-// WithLevelColors sets default ANSI colors for levels. Missing levels keep their
-// existing color.
+// WithLevelColors sets default ANSI colors for levels; missing levels keep theirs.
 func (s *ConsoleSink) WithLevelColors(colors map[Level]string) *ConsoleSink {
 	return s.WithLocalizedLevelColors("", colors)
 }
 
-// withLocalizedLevelColor sets the ANSI color for level when a record uses
-// lang. An empty lang configures the default color.
+// withLocalizedLevelColor sets the color for level when a record uses lang; an empty lang sets the default.
 func (s *ConsoleSink) withLocalizedLevelColor(lang string, level Level, color string) *ConsoleSink {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -91,8 +86,7 @@ func (s *ConsoleSink) withLocalizedLevelColor(lang string, level Level, color st
 	return s
 }
 
-// WithLocalizedLevelColors sets ANSI colors for records using lang. Missing
-// levels keep their existing color.
+// WithLocalizedLevelColors sets ANSI colors for records in lang; missing levels keep theirs.
 func (s *ConsoleSink) WithLocalizedLevelColors(lang string, colors map[Level]string) *ConsoleSink {
 	for level, color := range colors {
 		s.withLocalizedLevelColor(lang, level, color)
@@ -100,8 +94,7 @@ func (s *ConsoleSink) WithLocalizedLevelColors(lang string, colors map[Level]str
 	return s
 }
 
-// WithServiceColor sets the ANSI color used for the service prefix. Empty color
-// disables service-prefix coloring.
+// WithServiceColor sets the service prefix's ANSI color; empty disables it.
 func (s *ConsoleSink) WithServiceColor(color string) *ConsoleSink {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -109,8 +102,7 @@ func (s *ConsoleSink) WithServiceColor(color string) *ConsoleSink {
 	return s
 }
 
-// WithServicePrefixStyle sets the strings around the service prefix. The
-// default style renders service as [service].
+// WithServicePrefixStyle sets the strings around the service prefix, [service] by default.
 func (s *ConsoleSink) WithServicePrefixStyle(open, close string) *ConsoleSink {
 	s.mu.Lock()
 	defer s.mu.Unlock()

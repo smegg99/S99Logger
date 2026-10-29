@@ -11,8 +11,7 @@ import (
 	"time"
 )
 
-// reserved keys are written from the record itself and cannot be overridden by
-// event attributes.
+// reservedKeys come from the record and cannot be overridden by attributes.
 var reservedKeys = map[string]struct{}{
 	"time":       {},
 	"level":      {},
@@ -22,8 +21,7 @@ var reservedKeys = map[string]struct{}{
 	"message_id": {},
 }
 
-// JSONSink writes records as newline-delimited JSON to an io.Writer. It is
-// safe for concurrent use.
+// JSONSink writes records as newline-delimited JSON; safe for concurrent use.
 type JSONSink struct {
 	mu  sync.Mutex
 	out io.Writer

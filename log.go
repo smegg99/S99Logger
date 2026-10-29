@@ -19,9 +19,7 @@ func (l *Logger) Warn(event Event, ctx ...context.Context) { l.log(LevelWarn, ev
 // Error logs an event at error level.
 func (l *Logger) Error(event Event, ctx ...context.Context) { l.log(LevelError, event, ctx...) }
 
-// log resolves the event into a Record and writes it to the sink. It never
-// fails: translation errors fall back to the message id and sink errors are
-// discarded.
+// log resolves event into a Record and writes it; translation failures fall back to the id and sink errors are discarded.
 func (l *Logger) log(level Level, event Event, ctxs ...context.Context) {
 	if l == nil || isNilInterface(event) || isNilInterface(l.sink) {
 		return
