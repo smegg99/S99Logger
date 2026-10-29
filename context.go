@@ -6,10 +6,10 @@ import "context"
 
 type langKey struct{}
 
-// ContextWithLanguage returns a copy of ctx carrying lang. When a Logger logs
+// contextWithLanguage returns a copy of ctx carrying lang. When a Logger logs
 // with this context, lang overrides Options.Language for that call, which makes
 // per-request or per-user localization possible without a logger per language.
-func ContextWithLanguage(ctx context.Context, lang string) context.Context {
+func contextWithLanguage(ctx context.Context, lang string) context.Context {
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -18,12 +18,12 @@ func ContextWithLanguage(ctx context.Context, lang string) context.Context {
 
 // LanguageContext returns a background context carrying lang.
 func LanguageContext(lang string) context.Context {
-	return ContextWithLanguage(context.Background(), lang)
+	return contextWithLanguage(context.Background(), lang)
 }
 
-// LanguageFromContext returns the language stored by ContextWithLanguage, and
+// languageFromContext returns the language stored by ContextWithLanguage, and
 // whether one was present (and non-empty).
-func LanguageFromContext(ctx context.Context) (string, bool) {
+func languageFromContext(ctx context.Context) (string, bool) {
 	lang, ok := ctx.Value(langKey{}).(string)
 	return lang, ok && lang != ""
 }

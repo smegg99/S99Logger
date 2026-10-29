@@ -3,7 +3,6 @@ package tests
 
 import (
 	"bytes"
-	"context"
 	"strings"
 	"sync"
 	"testing"
@@ -56,9 +55,8 @@ func TestConsoleSinkCustomLevelPrefixAndColor(t *testing.T) {
 	var buf bytes.Buffer
 	sink := s99logger.NewConsoleSink(&buf).
 		WithColor(true).
-		WithLevelPrefix(s99logger.LevelInfo, "OK").
-		WithLevelColor(s99logger.LevelInfo, s99logger.ANSIBrightMagenta).
-		WithFieldColor("")
+		WithLevelPrefixes(map[s99logger.Level]string{s99logger.LevelInfo: "OK"}).
+		WithLevelColors(map[s99logger.Level]string{s99logger.LevelInfo: s99logger.ANSIRed})
 	logger := s99logger.New(sink, s99logger.Options{
 		Clock: func() time.Time { return time.Unix(0, 0) },
 	})
@@ -66,7 +64,7 @@ func TestConsoleSinkCustomLevelPrefixAndColor(t *testing.T) {
 	logger.Info(event{id: "ready", attrs: []s99logger.Attr{s99logger.String("mode", "custom")}})
 
 	line := buf.String()
-	for _, want := range []string{s99logger.ANSIBrightMagenta, "OK", "mode=custom"} {
+	for _, want := range []string{s99logger.ANSIRed, "OK", "mode=", "custom"} {
 		if !strings.Contains(line, want) {
 			t.Errorf("console line missing %q\ngot: %q", want, line)
 		}
@@ -104,20 +102,20 @@ func TestConsoleSinkLocalizedLevelPrefixes(t *testing.T) {
 	var buf bytes.Buffer
 	sink := s99logger.NewConsoleSink(&buf).
 		WithColor(true).
-		WithLocalizedLevelPrefix("pl", s99logger.LevelWarn, "UWAGA").
-		WithLocalizedLevelColor("pl", s99logger.LevelWarn, s99logger.ANSIBrightBlue)
+		WithLocalizedLevelPrefixes("pl", map[s99logger.Level]string{s99logger.LevelWarn: "UWAGA"}).
+		WithLocalizedLevelColors("pl", map[s99logger.Level]string{s99logger.LevelWarn: s99logger.ANSIYellow})
 	logger := s99logger.New(sink, s99logger.Options{
 		Clock: func() time.Time { return time.Unix(0, 0) },
 	})
 
-	ctx := s99logger.ContextWithLanguage(context.Background(), "pl-PL")
+	ctx := s99logger.LanguageContext("pl-PL")
 	logger.Warn(event{id: "slow"}, ctx)
 
 	line := buf.String()
 	if !strings.Contains(line, "UWAGA") {
 		t.Errorf("localized prefix missing\ngot: %q", line)
 	}
-	if !strings.Contains(line, s99logger.ANSIBrightBlue) {
+	if !strings.Contains(line, s99logger.ANSIYellow) {
 		t.Errorf("localized color missing\ngot: %q", line)
 	}
 	if strings.Contains(line, "WARN") {
@@ -159,8 +157,8 @@ func TestConsoleSinkConcurrentConfigurationAndWrites(t *testing.T) {
 		}()
 		go func() {
 			defer wg.Done()
-			sink.WithLevelPrefix(s99logger.LevelInfo, "OK")
-			sink.WithLevelColor(s99logger.LevelInfo, s99logger.ANSIGreen)
+			sink.WithLevelPrefixes(map[s99logger.Level]string{s99logger.LevelInfo: "OK"})
+			sink.WithLevelColors(map[s99logger.Level]string{s99logger.LevelInfo: s99logger.ANSIGreen})
 		}()
 	}
 	wg.Wait()

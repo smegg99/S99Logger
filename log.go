@@ -36,7 +36,7 @@ func (l *Logger) log(level Level, event Event, ctxs ...context.Context) {
 	}
 
 	lang := l.lang
-	if cl, ok := LanguageFromContext(ctx); ok {
+	if cl, ok := languageFromContext(ctx); ok {
 		lang = cl
 	}
 

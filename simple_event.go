@@ -45,13 +45,6 @@ func (e SimpleEvent) With(attrs ...Attr) SimpleEvent {
 	return e
 }
 
-// WithPluralCount returns a copy of e marked as pluralized with count.
-func (e SimpleEvent) WithPluralCount(count int) SimpleEvent {
-	e.pluralCount = count
-	e.plural = true
-	return e
-}
-
 func cloneAttrs(attrs []Attr) []Attr {
 	if len(attrs) == 0 {
 		return nil

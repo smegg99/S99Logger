@@ -43,10 +43,10 @@ func NewConsoleSink(w io.Writer) *ConsoleSink {
 		timeFormat:    time.DateTime,
 		levelPrefixes: map[string]map[Level]string{"": cloneLevelStrings(defaultLevelPrefixes)},
 		levelColors:   map[string]map[Level]string{"": cloneLevelStrings(defaultLevelColors)},
-		serviceColor:  ANSIFaint,
+		serviceColor:  ansiFaint,
 		serviceOpen:   "[",
 		serviceClose:  "]",
-		fieldColor:    ANSIFaint,
+		fieldColor:    ansiFaint,
 	}
 }
 
@@ -96,7 +96,7 @@ func (s *ConsoleSink) writeLevel(b *strings.Builder, lang string, level Level) {
 	if s.color && color != "" {
 		b.WriteString(color)
 		b.WriteString(prefix)
-		b.WriteString(ANSIReset)
+		b.WriteString(ansiReset)
 		return
 	}
 	b.WriteString(prefix)
@@ -110,7 +110,7 @@ func (s *ConsoleSink) writeService(b *strings.Builder, service string) {
 		b.WriteString(s.serviceOpen)
 		b.WriteString(service)
 		b.WriteString(s.serviceClose)
-		b.WriteString(ANSIReset)
+		b.WriteString(ansiReset)
 		return
 	}
 	b.WriteString(s.serviceOpen)
@@ -172,7 +172,7 @@ func (s *ConsoleSink) writeField(b *strings.Builder, key, value string) {
 		b.WriteString(s.fieldColor)
 		b.WriteString(key)
 		b.WriteByte('=')
-		b.WriteString(ANSIReset)
+		b.WriteString(ansiReset)
 		b.WriteString(value)
 		return
 	}

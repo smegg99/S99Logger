@@ -86,8 +86,8 @@ func (s *Sink) Rotate() error {
 	return s.logger.Rotate()
 }
 
-// RotateWithReason forces an immediate rotation and tags the backup filename
+// rotateWithReason forces an immediate rotation and tags the backup filename
 // with reason after timberjack sanitizes it.
-func (s *Sink) RotateWithReason(reason string) error {
+func (s *Sink) rotateWithReason(reason string) error {
 	return s.logger.RotateWithReason(reason)
 }

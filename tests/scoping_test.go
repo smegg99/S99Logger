@@ -2,7 +2,6 @@
 package tests
 
 import (
-	"context"
 	"testing"
 
 	"github.com/smegg99/s99logger"
@@ -56,7 +55,7 @@ func TestContextLanguageOverridesOption(t *testing.T) {
 	greeting := event{id: "greeting", attrs: []s99logger.Attr{s99logger.String("name", "Ola")}}
 
 	// A language on the context wins over Options.Language.
-	logger.Info(greeting, s99logger.ContextWithLanguage(context.Background(), "pl"))
+	logger.Info(greeting, s99logger.LanguageContext("pl"))
 	if sink.records[0].Message != "Cześć Ola" {
 		t.Errorf("message = %q, want Polish from context", sink.records[0].Message)
 	}
@@ -68,14 +67,6 @@ func TestContextLanguageOverridesOption(t *testing.T) {
 	logger.Info(greeting)
 	if sink.records[1].Message != "Hello Ola" {
 		t.Errorf("message = %q, want English default", sink.records[1].Message)
-	}
-}
-
-func TestLanguageContextUsesBackground(t *testing.T) {
-	ctx := s99logger.LanguageContext("pl")
-
-	if got, ok := s99logger.LanguageFromContext(ctx); !ok || got != "pl" {
-		t.Fatalf("LanguageFromContext = %q, %t; want pl, true", got, ok)
 	}
 }
 
