@@ -6,8 +6,8 @@ import "time"
 
 // Options configures a Logger; the zero value works, with time.Now and untranslated message ids.
 type Options struct {
-	// Language is the default target language passed to the Translator. It can
-	// be overridden per call with ContextWithLanguage.
+	// Language is the default target language passed to the Translator. A call logged with
+	// LanguageContext(lang) overrides it.
 	Language string
 	// Service is the service name attached to every record.
 	Service string

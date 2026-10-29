@@ -1,4 +1,5 @@
 // examples/pluralization/main.go
+
 package main
 
 import (

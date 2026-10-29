@@ -1,4 +1,5 @@
 // tests/simple_event_test.go
+
 package tests
 
 import (

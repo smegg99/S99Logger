@@ -1,4 +1,5 @@
 // examples/consoleprefixes/main.go
+
 package main
 
 import (

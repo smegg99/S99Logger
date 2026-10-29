@@ -1,4 +1,5 @@
 // examples/customsink/main.go
+
 //
 // Implementing your own Sink. A Sink just receives resolved Records, so you
 // can send logs anywhere: a counter, a metrics system, a database, etc.

@@ -1,4 +1,5 @@
 // examples/scopedattrs/main.go
+
 package main
 
 import (

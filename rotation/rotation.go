@@ -81,8 +81,3 @@ func (s *Sink) Sync() error {
 func (s *Sink) Rotate() error {
 	return s.logger.Rotate()
 }
-
-// rotateWithReason rotates now and tags the backup filename with the sanitized reason.
-func (s *Sink) rotateWithReason(reason string) error {
-	return s.logger.RotateWithReason(reason)
-}

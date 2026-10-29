@@ -1,4 +1,5 @@
 // examples/multisink/main.go
+
 package main
 
 import (

@@ -1,4 +1,5 @@
 // examples/verifytranslations/main.go
+
 package main
 
 import (

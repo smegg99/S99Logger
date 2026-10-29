@@ -90,7 +90,7 @@ concurrent use, and the logger discards a sink's error.
 | `NewJSONSink(w)` | one JSON object per line, time in UTC RFC 3339 |
 | `MultiSink(sinks...)` | every record to each sink |
 | `MinLevel(sink, level)` | records at `level` or above to `sink` |
-| `rotation.New(opts)` | JSON to `opts.Directory/opts.Filename`, rotated daily at `RotateAt` and by `MaxSizeMB`; old files compressed with `gzip` unless `Compression` says `none` or `zstd`; writes after `Close` are dropped |
+| `rotation.New(opts)` | JSON to `opts.Directory/opts.Filename`, rotated daily at `RotateAt` and by `MaxSizeMB`; old files compressed with `gzip` unless `Compression` says `none` or `zstd`, and any other value is an error; writes after `Close` are dropped |
 
 `rotation.Configure` uses the same defaults as `rotation.New`.
 
@@ -99,7 +99,8 @@ concurrent use, and the logger discards a sink's error.
 `Logger.SlogHandler(id)` adapts the logger for libraries that log through
 `log/slog`, such as Wails. Each slog record becomes event `id` with the slog
 message under `detail`; slog groups become dotted keys, and errors their text.
-`Logger.Enabled(level)` reports whether a record at `level` would be written.
+`Logger.Enabled(level)` reports whether the logger passes a record at `level` to
+its sink; a `MinLevel` sink further down may still drop it.
 
 ```go
 slog.SetDefault(slog.New(s99logger.Default().SlogHandler("runtime")))

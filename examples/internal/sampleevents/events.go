@@ -1,4 +1,5 @@
 // examples/internal/sampleevents/events.go
+
 package sampleevents
 
 import (

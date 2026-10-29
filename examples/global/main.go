@@ -1,4 +1,5 @@
 // examples/global/main.go
+
 package main
 
 import (

@@ -1,4 +1,5 @@
 // examples/minimal/main.go
+
 //
 // The smallest possible setup: a colored console logger with no translator.
 // Without a translator, the message is simply the stable message id.

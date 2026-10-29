@@ -1,4 +1,5 @@
 // tests/scoping_test.go
+
 package tests
 
 import (

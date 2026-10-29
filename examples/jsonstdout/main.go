@@ -1,4 +1,5 @@
 // examples/jsonstdout/main.go
+
 //
 // Newline-delimited JSON to stdout, no translator. Pipe it into jq or a log
 // shipper. Each line is one self-contained JSON object.

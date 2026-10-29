@@ -1,4 +1,5 @@
 // examples/localizedprefixes/main.go
+
 package main
 
 import (

@@ -1,4 +1,5 @@
 // examples/rotatingfile/main.go
+
 package main
 
 import (

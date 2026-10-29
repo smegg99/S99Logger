@@ -1,4 +1,5 @@
 // tests/logger_test.go
+
 package tests
 
 import (
